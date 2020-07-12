@@ -5,9 +5,11 @@ const requireDirectory = require('require-directory')
 class initManager {
     static initCore(app) {
         initManager.app = app
-        initManager.initLoadRouters() // 初始化加载路由，并注册到app应用上
+        initManager.initLoadRouters()
+        initManager.initLoadHttpException()
     }
 
+    // 初始化加载路由，并注册到app应用上
 	static initLoadRouters() {
         const apiDirectroy = `${process.cwd()}/app/api` // process.cwd()是获取当前当前项目在系统中的根目录，我也不知道这里直接用 /app/api为什么不行，可能是requireDirectory方法的路径得是相对路径或者是系统的根目录，而不能是项目根目录？
 		requireDirectory(module, apiDirectroy, { // 路径最好用根路径，否则移动文件夹就报错了
@@ -20,7 +22,13 @@ class initManager {
 				initManager.app.use(module.routes())
 			}
 		}
-	}
+    }
+    
+    // 初始化加载Httpexception模块，放到全局global对象上面，方便使用具体异常类而不用频繁require
+    static initLoadHttpException() {
+        const errors = require('./http-exception')
+        global.errors = errors
+    }
 }
 
 module.exports = {

@@ -1,6 +1,9 @@
  // classic主题路由
  const Router = require('koa-router')
- const {HttpException} = require('../../../core/http-exception')
+ const {
+    HttpException,
+    ParameterException    
+} = require('../../../core/http-exception')
  const router = new Router({
     prefix: '/v1'
  })
@@ -12,7 +15,7 @@
     const body = ctx.request.body // 请求体里的参数
 
     if (true) {
-        error = new HttpException('参数错误', 10000, 400)
+        error = new global.errors.ParameterException()
         throw error
     }
 
