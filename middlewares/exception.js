@@ -9,8 +9,14 @@ const catchError = async (ctx, next) => {
     try {
         await next() // 将全局异常处理中间件为最外层中间件，第一个走，对其他的中间件进行try catch 达到全局捕获异常的效果
     } catch (error) { // 当有错误时，返回给前端的有意义的错误提示
+        // dev生产环境 + 发生未知异常，那么我们就直接将errorthrow
+        const isDev = global.config.environment === 'dev' // 是否是开发环境
+        const ifHttpException = error instanceof HttpException // 是否是已知异常
+        if (!ifHttpException && isDev) { // 生产环境 + 未知异常就直接throw
+            throw error
+        }
         // 已知异常(如果是HttpExpection的实例/子类，那么就是已知异常 )
-        if (error instanceof HttpException) { // 如果error对象中有errorCode字段，证明这是我们自定义的错误，所以就将我们设置的信息提示返回给前端
+        if (ifHttpException) { // 如果error对象中有errorCode字段，证明这是我们自定义的错误，所以就将我们设置的信息提示返回给前端
             ctx.body = {
                 msg: error.msg,
                 errorCode: error.errorCode, 
@@ -25,6 +31,7 @@ const catchError = async (ctx, next) => {
             }
             ctx.status = 500 // 未知异常一般抛出500状态码
         }
+        // throw error // 为什么这里不能先ctxbody，然后再将error throw出去
     }
 }
 
