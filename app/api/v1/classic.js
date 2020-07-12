@@ -15,7 +15,7 @@ const {PositiveIntegerValidate} = require('../../validate/validate')
     const header = ctx.request.header // 请求头里的参数
     const body = ctx.request.body // 请求体里的参数
 
-    const v = new PositiveIntegerValidate().validate(ctx)
+    const v = await new PositiveIntegerValidate().validate(ctx)
 
     if (true) { 
         error = new global.errors.ParameterException()

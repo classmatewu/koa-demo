@@ -1,5 +1,6 @@
 // 基于LinValidate定义各种校验规则类
-const {LinValidator, Rule} = require('../../core/lin-validator')
+const {LinValidator, Rule} = require('../../core/lin-validator-v2')
+const {User} = require('../models/user')
 
 class PositiveIntegerValidate extends LinValidator {
     constructor() {
@@ -39,6 +40,19 @@ class RegisterValidator extends LinValidator {
         const psw2 = vals.body.password2
         if (psw1 !== psw2) {
             throw new Error('两个密码必须相同') // 注意这里直接抛出一个Error的异常就够了，因为Lin-validate内部就有统一地对异常进行处理并抛出详细的异常类型
+        }
+    }
+
+    // 校验email是否已经存在，因为我们的user model中该key为唯一的
+    async validateEmail(vals) {
+        const email = vals.body.email
+        const user = await User.findOne({ // User是model，findOne是model对象的一个方法，查询一条记录
+            where: { // 查询跟sql语法一样，用where关键字
+                email: email // 查询值为email的email值，这里其实可以简写的
+            }  
+        })
+        if (user) {
+            throw new Error('email已存在')
         }
     }
 }

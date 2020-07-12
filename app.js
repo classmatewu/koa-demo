@@ -4,7 +4,7 @@ const parser = require('koa-bodyparser') // 加载这个包并注册中间件使
 const {initManager} = require('./core/init')
 const {catchError} = require('./middlewares/exception')
 
-require('./app/models/user')
+// require('./app/models/user') // 强行加上这一句，来让应用程序调用model生成一个表
 
 const app = new Koa() // koa应用程序对象
 app.use(parser()) // 注意这里得调用一下parser()再注册到app上面

@@ -35,7 +35,7 @@ const sequelize = new Sequelize(dbName, user, password, {
 })
 
 sequelize.sync({
-    force:false
+    force:false // 每次是否清空该表
 })
 
 module.exports = {
