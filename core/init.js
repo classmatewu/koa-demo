@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const requireDirectory = require('require-directory')
 
 class initManager {
+    // 初始化
     static initCore(app) {
         initManager.app = app
         initManager.initLoadRouters()

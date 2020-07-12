@@ -17,8 +17,14 @@ const catchError = async (ctx, next) => {
                 request: `${ctx.method} ${ctx.path}` // request可以直接在ctx上面拿到，所以就不放到类里面了
             }
             ctx.status = error.statusCode // 注意http状态码不是保存在ctx.body对象中，而是写在ctx.status中返回给前端
+        } else { // 未知异常，就是这个异常不是我们自定义抛出的异常，而是在编译时由于语法错误等由node抛出来的异常，同样我们也要像已知异常那样的格式返回给前端
+            ctx.body = {
+                msg: '出现了一个未知异常，注意排查下api逻辑或语法错误噢',
+                errorCode: 999,
+                request: `${ctx.method} ${ctx.path}`
+            }
+            ctx.status = 500 // 未知异常一般抛出500状态码
         }
-        // throw error // 如果未知异常（例如语法异常等，不是我们throw出来的，而是IED编译时throw出来的，那么就直接将这个错误在终端抛出来，方便我们开发排查错误）
     }
 }
 
