@@ -1,12 +1,19 @@
  // classic主题路由
 const Router = require('koa-router')
 const {RegisterValidator} = require('../../validate/validate')
+const { User } = require('../../../app/models/user')
 const router = new Router({
     prefix: '/v1/user'
 })
 
 router.post('/register', async (ctx, next) => {
     const v = new RegisterValidator().validate(ctx)
+    const user = {
+        email: v.get('body.email'),
+        password: v.get('body.password1'),
+        nickname: v.get('body.nickname')
+    }
+    User.create(user)
     ctx.body = "注册成功辽"
 })
 
