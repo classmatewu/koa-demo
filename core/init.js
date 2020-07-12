@@ -8,6 +8,14 @@ class initManager {
         initManager.app = app
         initManager.initLoadRouters()
         initManager.initLoadHttpException()
+        initManager.initLoadConfig()
+    }
+
+    // 初始化加载配置文件，并挂载到全局的global对象上
+    static initLoadConfig(path) {
+        const configPath = path || process.cwd() + '/config/config.js'
+        const config = require(configPath)
+        global.config = config
     }
 
     // 初始化加载路由，并注册到app应用上

@@ -4,6 +4,7 @@
     HttpException,
     ParameterException    
 } = require('../../../core/http-exception')
+const {PositiveIntegerValidate} = require('../../validate/validate')
  const router = new Router({
     prefix: '/v1'
  })
@@ -14,7 +15,9 @@
     const header = ctx.request.header // 请求头里的参数
     const body = ctx.request.body // 请求体里的参数
 
-    if (true) {
+    const v = new PositiveIntegerValidate().validate(ctx)
+
+    if (true) { 
         error = new global.errors.ParameterException()
         throw error
     }
